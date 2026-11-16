@@ -22,6 +22,19 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
+    <script>
+      // Pick the theme before first paint: saved choice, else the system setting.
+      (function () {
+        var t;
+        try {
+          t = localStorage.getItem('theme');
+        } catch (e) {}
+        if (t !== 'light' && t !== 'dark') {
+          t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
   </head>
   <body>
     <header class="nav">
@@ -36,6 +49,17 @@
           <a href="#compare">Compare</a>
           <a href="#start">Get started</a>
         </nav>
+        <button class="theme-btn" id="theme-btn" type="button" aria-label="Switch to light mode">
+          <svg class="sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4" />
+            <path
+              d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+            />
+          </svg>
+          <svg class="moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+          </svg>
+        </button>
         <a class="btn btn-ghost btn-sm" href="https://github.com/saiyadzaid/api-journey">
           <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
             <path
@@ -473,13 +497,44 @@ app.<span class="f">listen</span>(<span class="n">3000</span>);
 
       // Dark / light screenshot toggle.
       var img = document.getElementById('shot-img');
+      function showShot(theme) {
+        img.src = 'assets/explorer-' + theme + '.png';
+        document.querySelectorAll('[data-shot]').forEach(function (b) {
+          b.setAttribute('aria-pressed', String(b.dataset.shot === theme));
+        });
+      }
       document.querySelectorAll('[data-shot]').forEach(function (btn) {
         btn.addEventListener('click', function () {
-          img.src = 'assets/explorer-' + btn.dataset.shot + '.png';
-          document.querySelectorAll('[data-shot]').forEach(function (b) {
-            b.setAttribute('aria-pressed', String(b === btn));
-          });
+          showShot(btn.dataset.shot);
         });
+      });
+
+      // Site theme switch. The screenshot follows the site theme.
+      var root = document.documentElement;
+      var themeBtn = document.getElementById('theme-btn');
+      function applyTheme(theme) {
+        root.dataset.theme = theme;
+        themeBtn.setAttribute(
+          'aria-label',
+          theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
+        );
+        showShot(theme);
+      }
+      applyTheme(root.dataset.theme || 'dark');
+      themeBtn.addEventListener('click', function () {
+        var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+        try {
+          localStorage.setItem('theme', next);
+        } catch (e) {}
+        applyTheme(next);
+      });
+      // Follow system changes until the visitor picks a theme.
+      matchMedia('(prefers-color-scheme: light)').addEventListener('change', function (e) {
+        var saved;
+        try {
+          saved = localStorage.getItem('theme');
+        } catch (err) {}
+        if (!saved) applyTheme(e.matches ? 'light' : 'dark');
       });
     </script>
   </body>
