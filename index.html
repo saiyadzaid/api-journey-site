@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>API Journey — a built-in API client for Express</title>
+    <meta
+      name="description"
+      content="Add one line to your Express app and every route shows up in a Postman-style collection you can open, edit and send. No import, no account, no dependencies."
+    />
+    <meta property="og:title" content="API Journey — a built-in API client for Express" />
+    <meta
+      property="og:description"
+      content="One line of middleware. Every Express route, discovered automatically, in a Postman-style client."
+    />
+    <meta property="og:image" content="assets/explorer-dark.png" />
+    <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="nav">
+      <div class="wrap nav-inner">
+        <a class="brand" href="#top">
+          <img src="assets/logo.svg" alt="" width="28" height="28" />
+          <span>API Journey</span>
+        </a>
+        <nav class="nav-links" aria-label="Main">
+          <a href="#features">Features</a>
+          <a href="#demo">Demo</a>
+          <a href="#compare">Compare</a>
+          <a href="#start">Get started</a>
+        </nav>
+        <a class="btn btn-ghost btn-sm" href="https://github.com/saiyadzaid/api-journey">
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+            <path
+              fill="currentColor"
+              d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+            />
+          </svg>
+          GitHub
+        </a>
+      </div>
+    </header>
+
+    <main id="top">
+      <!-- ============ Hero ============ -->
+      <section class="hero">
+        <div class="wrap hero-inner">
+          <p class="eyebrow">Express middleware · MIT · zero dependencies</p>
+          <h1>Your Express routes, <span class="accent">already in an API client.</span></h1>
+          <p class="lede">
+            Add one line and every route of your app shows up in a Postman-style collection you can
+            open, edit and send. Nothing to import, nothing to type by hand, no account.
+          </p>
+
+          <div class="hero-cta">
+            <button class="install" type="button" data-copy="npm install api-journey">
+              <span class="prompt">$</span>
+              <code>npm install api-journey</code>
+              <span class="copy-label">Copy</span>
+            </button>
+            <a class="btn btn-primary" href="#start">Get started</a>
+          </div>
+
+          <div class="shot">
+            <div class="shot-bar">
+              <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+              <span class="shot-url">localhost:3000/api-journey</span>
+              <div class="theme-toggle" role="group" aria-label="Screenshot theme">
+                <button type="button" data-shot="dark" aria-pressed="true">Dark</button>
+                <button type="button" data-shot="light" aria-pressed="false">Light</button>
+              </div>
+            </div>
+            <img
+              id="shot-img"
+              src="assets/explorer-dark.png"
+              width="1440"
+              height="860"
+              alt="The API Journey explorer: a collection of discovered routes on the left, a request to GET /users/:id in the middle with its JSON response, and route documentation on the right."
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ How it works ============ -->
+      <section class="section how">
+        <div class="wrap how-grid">
+          <div>
+            <p class="eyebrow">How it works</p>
+            <h2>One line. No spec to write.</h2>
+            <p class="muted">
+              API Journey reads your app's router at page load, so new routes appear the next time
+              you refresh. Nested routers, <code>router.route()</code>, <code>app.all()</code>,
+              array paths and mounted sub-apps are all found, on Express 4 and 5.
+            </p>
+            <ol class="steps">
+              <li><b>Install</b> the package from npm.</li>
+              <li><b>Mount</b> it on any path in <code>app.js</code>.</li>
+              <li><b>Open</b> <code>/api-journey</code> and press Send.</li>
+            </ol>
+          </div>
+          <pre class="code" aria-label="Example app.js"><code><span class="c">// app.js</span>
+<span class="k">const</span> express = <span class="f">require</span>(<span class="s">'express'</span>);
+<span class="k">const</span> apiJourney = <span class="f">require</span>(<span class="s">'api-journey'</span>);
+
+<span class="k">const</span> app = <span class="f">express</span>();
+<span class="hl">app.<span class="f">use</span>(<span class="s">'/api-journey'</span>, <span class="f">apiJourney</span>());</span>
+
+app.<span class="f">get</span>(<span class="s">'/users/:id'</span>, <span class="k">function</span> <span class="f">getUserById</span>(req, res) {
+  res.<span class="f">json</span>({ id: req.params.id });
+});
+
+app.<span class="f">listen</span>(<span class="n">3000</span>);
+<span class="c">// → http://localhost:3000/api-journey</span>
+<span class="c">//   "Get User By Id"  GET {{baseUrl}}/users/:id</span></code></pre>
+        </div>
+      </section>
+
+      <!-- ============ Features ============ -->
+      <section class="section" id="features">
+        <div class="wrap">
+          <p class="eyebrow">Features</p>
+          <h2>Everything you reach for in Postman, wired to your code.</h2>
+
+          <div class="features">
+            <article class="feature">
+              <div class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M4 6h16M4 12h10M4 18h6" />
+                  <circle cx="18" cy="16" r="3" />
+                  <path d="m20.2 18.2 1.8 1.8" />
+                </svg>
+              </div>
+              <h3>Automatic route discovery</h3>
+              <p>
+                Every method and path, at any nesting depth. Routes it can't place are reported in
+                the sidebar — never shown with a wrong URL.
+              </p>
+            </article>
+
+            <article class="feature">
+              <div class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path
+                    d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+                  />
+                </svg>
+              </div>
+              <h3>Readable names and folders</h3>
+              <p>
+                <code>getUserById</code> becomes “Get User By Id”. Requests are grouped into folders
+                by the path their router is mounted at.
+              </p>
+            </article>
+
+            <article class="feature">
+              <div class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <rect x="3" y="4" width="18" height="16" rx="2" />
+                  <path d="M3 9h18M8 4v5" />
+                </svg>
+              </div>
+              <h3>Postman-style client</h3>
+              <p>
+                Tabs, method + URL bar, params ⇄ URL sync, path variables, Bearer and Basic auth,
+                headers, form-data with file uploads, raw JSON, XML and more.
+              </p>
+            </article>
+
+            <article class="feature">
+              <div class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path
+                    d="M8 4c-2 0-2 2-2 4s-2 4-2 4 2 2 2 4 0 4 2 4M16 4c2 0 2 2 2 4s2 4 2 4-2 2-2 4 0 4-2 4"
+                  />
+                </svg>
+              </div>
+              <h3>Environments and variables</h3>
+              <p>
+                <code>{{baseUrl}}</code> out of the box. Add <code>{{token}}</code> and friends,
+                then switch environments in one click.
+              </p>
+            </article>
+
+            <article class="feature">
+              <div class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M4 5h16v14H4z" />
+                  <path d="m8 10 2 2-2 2M12 14h4" />
+                </svg>
+              </div>
+              <h3>Response viewer</h3>
+              <p>
+                Status, time and size. Collapsible JSON with line numbers, raw and HTML preview,
+                find in response, headers and cookies, copy or save.
+              </p>
+            </article>
+
+            <article class="feature">
+              <div class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="m8 8-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14" /></svg>
+              </div>
+              <h3>Code snippets</h3>
+              <p>
+                Copy any request as cURL, JavaScript <code>fetch</code> or Node.js
+                <code>axios</code>, with variables already filled in.
+              </p>
+            </article>
+
+            <article class="feature">
+              <div class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14" /></svg>
+              </div>
+              <h3>OpenAPI and Postman export</h3>
+              <p>
+                <code>/openapi.json</code> (OpenAPI 3.0.3) and
+                <code>/postman.json</code> (Collection v2.1) are served next to the explorer.
+              </p>
+            </article>
+
+            <article class="feature">
+              <div class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M6 3h9l4 4v14H6z" />
+                  <path d="M14 3v5h5M9 13h7M9 17h5" />
+                </svg>
+              </div>
+              <h3>Optional route docs</h3>
+              <p>
+                Put <code>doc({ summary, params, body, responses })</code> in front of a handler to
+                pre-fill requests and add a Documentation panel.
+              </p>
+            </article>
+
+            <article class="feature">
+              <div class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <rect x="5" y="11" width="14" height="10" rx="2" />
+                  <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+                </svg>
+              </div>
+              <h3>Safe by default</h3>
+              <p>
+                Off when <code>NODE_ENV=production</code>. Turn it on for a deployed app and it
+                requires a password before it opens.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ Demo ============ -->
+      <section class="section demo" id="demo">
+        <div class="wrap">
+          <p class="eyebrow">Demo</p>
+          <h2>From <code>npm install</code> to a sent request in under a minute.</h2>
+          <p class="muted center-narrow">
+            Watch API Journey find the routes of an existing Express app, then send, edit and save a
+            request — without leaving the browser tab your app already runs in.
+          </p>
+
+          <div class="video">
+            <!--
+              Drop a screen recording at site/assets/demo.mp4 (and optionally demo.webm).
+              Until it exists, the poster screenshot is shown.
+              To use YouTube instead, replace <video> with:
+              <iframe src="https://www.youtube-nocookie.com/embed/VIDEO_ID" title="API Journey demo"
+                      allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+            -->
+            <video controls preload="none" playsinline poster="assets/explorer-dark.png">
+              <source src="assets/demo.webm" type="video/webm" />
+              <source src="assets/demo.mp4" type="video/mp4" />
+              Your browser can't play this video.
+            </video>
+          </div>
+
+          <ul class="demo-points">
+            <li><span>0:00</span> Add the middleware to an existing app</li>
+            <li><span>0:15</span> Every route appears, grouped by router</li>
+            <li><span>0:30</span> Set a <code>{{token}}</code> environment and send</li>
+            <li><span>0:45</span> Copy as cURL, export to Postman</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ============ Comparison ============ -->
+      <section class="section" id="compare">
+        <div class="wrap">
+          <p class="eyebrow">Compare</p>
+          <h2>How it stacks up.</h2>
+          <p class="muted center-narrow">
+            API Journey is built for one job: exploring the Express app you're working on, right
+            now. Here's an honest look next to the tools you might already use.
+          </p>
+
+          <div class="table-scroll" tabindex="0" role="region" aria-label="Feature comparison">
+            <table class="compare">
+              <thead>
+                <tr>
+                  <th scope="col"></th>
+                  <th scope="col" class="us">API Journey</th>
+                  <th scope="col">Postman</th>
+                  <th scope="col">Swagger UI</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Finds your routes automatically</th>
+                  <td class="us"><i class="yes">Yes</i>reads the Express router</td>
+                  <td><i class="no">No</i>build or import a collection</td>
+                  <td><i class="part">Partly</i>needs an OpenAPI spec</td>
+                </tr>
+                <tr>
+                  <th scope="row">Stays in sync as code changes</th>
+                  <td class="us"><i class="yes">Yes</i>on every page load</td>
+                  <td><i class="no">No</i>re-import or edit by hand</td>
+                  <td><i class="part">Partly</i>if the spec is kept current</td>
+                </tr>
+                <tr>
+                  <th scope="row">Setup</th>
+                  <td class="us"><i class="yes">1 line</i>npm package</td>
+                  <td><i class="part">App</i>desktop app or web, account</td>
+                  <td><i class="part">Spec</i>write or generate a spec</td>
+                </tr>
+                <tr>
+                  <th scope="row">Runs inside your app</th>
+                  <td class="us"><i class="yes">Yes</i></td>
+                  <td><i class="no">No</i></td>
+                  <td><i class="yes">Yes</i></td>
+                </tr>
+                <tr>
+                  <th scope="row">Full request builder (tabs, auth, bodies, files)</th>
+                  <td class="us"><i class="yes">Yes</i></td>
+                  <td><i class="yes">Yes</i></td>
+                  <td><i class="part">Basic</i>“Try it out” per operation</td>
+                </tr>
+                <tr>
+                  <th scope="row">Environments and <code>{{variables}}</code></th>
+                  <td class="us"><i class="yes">Yes</i></td>
+                  <td><i class="yes">Yes</i></td>
+                  <td><i class="no">No</i></td>
+                </tr>
+                <tr>
+                  <th scope="row">Saved requests and history</th>
+                  <td class="us"><i class="yes">Yes</i>in your browser</td>
+                  <td><i class="yes">Yes</i>synced to the cloud</td>
+                  <td><i class="no">No</i></td>
+                </tr>
+                <tr>
+                  <th scope="row">Code snippets</th>
+                  <td class="us"><i class="yes">Yes</i>cURL, fetch, axios</td>
+                  <td><i class="yes">Yes</i>many languages</td>
+                  <td><i class="part">cURL</i></td>
+                </tr>
+                <tr>
+                  <th scope="row">OpenAPI / Postman export</th>
+                  <td class="us"><i class="yes">Both</i></td>
+                  <td><i class="part">Collection</i></td>
+                  <td><i class="part">Is the spec</i></td>
+                </tr>
+                <tr>
+                  <th scope="row">Team sync, test scripts, mocks, monitors</th>
+                  <td class="us"><i class="no">No</i>local by design</td>
+                  <td><i class="yes">Yes</i></td>
+                  <td><i class="no">No</i></td>
+                </tr>
+                <tr>
+                  <th scope="row">Frameworks</th>
+                  <td class="us"><i class="part">Express</i>4 and 5</td>
+                  <td><i class="yes">Any</i></td>
+                  <td><i class="yes">Any</i>with a spec</td>
+                </tr>
+                <tr>
+                  <th scope="row">Price</th>
+                  <td class="us"><i class="yes">Free</i>MIT</td>
+                  <td><i class="part">Free tier</i>paid plans for teams</td>
+                  <td><i class="yes">Free</i>open source</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="when">
+            <div>
+              <h3>Reach for API Journey when…</h3>
+              <p>
+                you're building or debugging an Express API and want every endpoint ready to send,
+                with no collection to maintain.
+              </p>
+            </div>
+            <div>
+              <h3>Keep Postman when…</h3>
+              <p>
+                you need shared team workspaces, test suites, mocks or monitors. Export
+                <code>/postman.json</code> and bring your routes with you.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ Get started ============ -->
+      <section class="section start" id="start">
+        <div class="wrap start-inner">
+          <h2>Try it on your app in a minute.</h2>
+          <p class="muted">Node.js 20+ and Express 4 or 5. No other dependencies.</p>
+          <div class="start-code">
+            <button class="install" type="button" data-copy="npm install api-journey">
+              <span class="prompt">$</span>
+              <code>npm install api-journey</code>
+              <span class="copy-label">Copy</span>
+            </button>
+            <button
+              class="install"
+              type="button"
+              data-copy="app.use('/api-journey', require('api-journey')());"
+            >
+              <span class="prompt">js</span>
+              <code>app.use('/api-journey', require('api-journey')());</code>
+              <span class="copy-label">Copy</span>
+            </button>
+          </div>
+          <div class="start-links">
+            <a class="btn btn-primary" href="https://github.com/saiyadzaid/api-journey#readme"
+              >Read the docs</a
+            >
+            <a class="btn btn-ghost" href="https://www.npmjs.com/package/api-journey"
+              >View on npm</a
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-inner">
+        <span class="brand small"
+          ><img src="assets/logo.svg" alt="" width="20" height="20" /> API Journey</span
+        >
+        <span class="muted">MIT licensed. Not affiliated with Postman or SmartBear.</span>
+        <span class="footer-links">
+          <a href="https://github.com/saiyadzaid/api-journey">GitHub</a>
+          <a href="https://www.npmjs.com/package/api-journey">npm</a>
+          <a href="https://github.com/saiyadzaid/api-journey/blob/master/CHANGELOG.md">Changelog</a>
+        </span>
+      </div>
+    </footer>
+
+    <script>
+      // Copy-to-clipboard for install snippets.
+      document.querySelectorAll('[data-copy]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var label = btn.querySelector('.copy-label');
+          navigator.clipboard.writeText(btn.dataset.copy).then(
+            function () {
+              label.textContent = 'Copied';
+              setTimeout(function () {
+                label.textContent = 'Copy';
+              }, 1500);
+            },
+            function () {
+              label.textContent = 'Select & copy';
+            }
+          );
+        });
+      });
+
+      // Dark / light screenshot toggle.
+      var img = document.getElementById('shot-img');
+      document.querySelectorAll('[data-shot]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          img.src = 'assets/explorer-' + btn.dataset.shot + '.png';
+          document.querySelectorAll('[data-shot]').forEach(function (b) {
+            b.setAttribute('aria-pressed', String(b === btn));
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
