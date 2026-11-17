@@ -488,6 +488,57 @@ h3 {
   min-width: calc(100% + 48px);
 }
 
+/* Framework tabs above the code sample */
+.fw {
+  min-width: 0; /* let the code scroll inside the grid on small screens */
+}
+.fw-tabs {
+  display: flex;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-bottom: 0;
+  border-radius: var(--radius) var(--radius) 0 0;
+  background: var(--bg);
+}
+.fw-tabs button {
+  flex: none;
+  padding: 11px 16px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--text-2);
+  font: 600 0.875rem var(--font);
+  cursor: pointer;
+}
+@media (max-width: 480px) {
+  .fw-tabs button {
+    padding: 10px 11px;
+    font-size: 0.8125rem;
+  }
+}
+.fw-tabs button:hover {
+  color: var(--text);
+}
+.fw-tabs button[aria-selected='true'] {
+  color: var(--text);
+  border-bottom-color: var(--accent);
+}
+.fw .code {
+  border-radius: 0 0 var(--radius) var(--radius);
+  min-height: 26rem; /* same height for every tab, so the page doesn't jump */
+}
+.fw-note {
+  margin-top: 24px;
+  font-size: 0.925rem;
+}
+.fw-link {
+  color: var(--text-2);
+  font-size: 0.9rem;
+}
+.fw-link:hover {
+  color: var(--accent);
+}
+
 /* ---------- Features ---------- */
 .features {
   display: grid;
