@@ -351,7 +351,74 @@ h3 {
   gap: 12px;
   justify-content: center;
   flex-wrap: wrap;
-  margin-bottom: 64px;
+  margin-bottom: 20px;
+}
+
+/* npm downloads under the call to action. Space is reserved so nothing moves when it loads. */
+.hero-meta {
+  display: flex;
+  justify-content: center;
+  min-height: 32px;
+  margin-bottom: 44px;
+}
+.dl-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-2);
+  font-size: 0.875rem;
+  text-decoration: none;
+  animation: dl-in 0.3s ease-out;
+}
+.dl-stat[hidden] {
+  display: none;
+}
+.dl-stat:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+.dl-stat b {
+  color: var(--text);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.dl-note {
+  color: var(--text-3);
+}
+.dl-spark {
+  width: 48px;
+  height: 12px;
+  flex: none;
+  overflow: visible;
+}
+.dl-spark-line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+.dl-spark-area {
+  fill: var(--accent-soft);
+}
+@keyframes dl-in {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dl-stat {
+    animation: none;
+  }
+}
+@media (max-width: 420px) {
+  .dl-note {
+    display: none;
+  }
 }
 
 .shot {

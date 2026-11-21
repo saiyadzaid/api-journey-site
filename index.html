@@ -93,6 +93,24 @@
             <a class="btn btn-primary" href="#start">Get started</a>
           </div>
 
+          <!-- Filled in from npm's download stats API; stays hidden if that fails. -->
+          <div class="hero-meta">
+            <a
+              class="dl-stat"
+              id="dl-stat"
+              href="https://www.npmjs.com/package/api-journey"
+              title="Total downloads since the first release, counted by npm (updated daily). The chart shows the last 30 days."
+              hidden
+            >
+              <svg class="dl-spark" viewBox="0 0 96 24" aria-hidden="true">
+                <path class="dl-spark-area" id="dl-spark-area" d="" />
+                <path class="dl-spark-line" id="dl-spark-line" d="" />
+              </svg>
+              <span><b id="dl-total"></b> npm downloads</span>
+              <span class="dl-note">· updated daily</span>
+            </a>
+          </div>
+
           <div class="shot">
             <div class="shot-bar">
               <span class="dot"></span><span class="dot"></span><span class="dot"></span>
@@ -620,6 +638,74 @@ app.<span class="f">get</span>(<span class="s">'/users/:id'</span>, <span class=
     </footer>
 
     <script>
+      // npm downloads: total since the first release, plus a 30-day chart. npm updates these
+      // once a day (with a 1–2 day delay); its API allows browser requests and caches for 5 min.
+      (function () {
+        var PACKAGE = 'api-journey';
+        var FIRST_RELEASE = '2026-11-14';
+        var API = 'https://api.npmjs.org/downloads/';
+        var stat = document.getElementById('dl-stat');
+        if (!stat || !window.fetch) return;
+
+        function get(path) {
+          return fetch(API + path).then(function (res) {
+            if (!res.ok) throw new Error('npm API ' + res.status);
+            return res.json();
+          });
+        }
+
+        /** Area + line paths for a 96x24 sparkline. */
+        function sparkline(values) {
+          var w = 96;
+          var h = 24;
+          var max = Math.max.apply(null, values.concat(1));
+          var step = values.length > 1 ? w / (values.length - 1) : w;
+          var points = values.map(function (v, i) {
+            return [i * step, h - 2 - (v / max) * (h - 4)];
+          });
+          var line = points
+            .map(function (p, i) {
+              return (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1);
+            })
+            .join(' ');
+          return { line: line, area: line + ' L' + w + ' ' + h + ' L0 ' + h + ' Z' };
+        }
+
+        var today = new Date().toISOString().slice(0, 10);
+        Promise.all([
+          get('point/' + FIRST_RELEASE + ':' + today + '/' + PACKAGE),
+          get('range/last-month/' + PACKAGE),
+        ])
+          .then(function (results) {
+            var total = results[0].downloads;
+            if (typeof total !== 'number' || total <= 0) return;
+            document.getElementById('dl-total').textContent = new Intl.NumberFormat('en').format(
+              total
+            );
+
+            // Daily counts, without the zero days before the first release.
+            var days = (results[1].downloads || [])
+              .filter(function (d) {
+                return d.day >= FIRST_RELEASE;
+              })
+              .map(function (d) {
+                return d.downloads;
+              });
+            var svg = stat.querySelector('.dl-spark');
+            if (days.length > 1) {
+              var paths = sparkline(days);
+              document.getElementById('dl-spark-line').setAttribute('d', paths.line);
+              document.getElementById('dl-spark-area').setAttribute('d', paths.area);
+            } else {
+              svg.style.display = 'none';
+            }
+            stat.hidden = false;
+          })
+          .catch(function () {
+            // Offline or npm unavailable: leave the stat hidden.
+          });
+      })();
+
       // Copy-to-clipboard for install snippets.
       document.querySelectorAll('[data-copy]').forEach(function (btn) {
         btn.addEventListener('click', function () {
